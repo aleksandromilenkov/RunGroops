@@ -25,10 +25,10 @@ namespace RunGroops.Repository {
         }
 
         public async Task<Race> GetByIdAsync(int id) {
-            return await _context.Races.FirstOrDefaultAsync(r => r.Id == id);
+            return await _context.Races.Include(r => r.Address).FirstOrDefaultAsync(r => r.Id == id);
         }
 
-        public async Task<IEnumerable<Race>> GetRacesByCity(string city) {
+        public async Task<IEnumerable<Race>> GetAllRacesByCity(string city) {
             return await _context.Races.Where(r => r.Address.City == city).ToListAsync();
         }
 
@@ -38,7 +38,8 @@ namespace RunGroops.Repository {
         }
 
         public bool Update(Race club) {
-            throw new NotImplementedException();
+            _context.Update(club);
+            return Save();
         }
     }
 }

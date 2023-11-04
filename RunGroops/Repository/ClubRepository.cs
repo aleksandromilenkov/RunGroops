@@ -25,7 +25,7 @@ namespace RunGroops.Repository {
         }
 
         public async Task<Club> GetByIdAsync(int id) {
-            return await _context.Clubs.FirstOrDefaultAsync(c => c.Id == id);
+            return await _context.Clubs.Include(c => c.Address).FirstOrDefaultAsync(c => c.Id == id);
         }
 
         public async Task<IEnumerable<Club>> GetClubByCity(string city) {
@@ -38,7 +38,8 @@ namespace RunGroops.Repository {
         }
 
         public bool Update(Club club) {
-            throw new NotImplementedException();
+            _context.Update(club);
+            return Save();
         }
     }
 }
