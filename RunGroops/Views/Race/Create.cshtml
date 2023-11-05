@@ -1,5 +1,5 @@
 ﻿@using RunGroops.Data.Enum;
-@model Club
+@model Race
 @*
     For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 *@
@@ -23,11 +23,11 @@
         <span asp-validation-for="Image" class="text-danger"></span>
     </div>
     <div class="form-group">
-        <label asp-for="ClubCategory">ClubCategory</label>
-        <select asp-for="ClubCategory" asp-items="@Html.GetEnumSelectList<ClubCategory>()" class="form-control form-control-lg">
+        <label asp-for="RaceCategory">RaceCategory</label>
+        <select asp-for="RaceCategory" asp-items="@Html.GetEnumSelectList<RaceCategory>()" class="form-control form-control-lg">
             <option>--Select--</option>
         </select>
-        <span asp-validation-for="ClubCategory" class="text-danger"></span>
+        <span asp-validation-for="RaceCategory" class="text-danger"></span>
     </div>
     <div class="form-group">
         <label asp-for="Address.Street">Street</label>

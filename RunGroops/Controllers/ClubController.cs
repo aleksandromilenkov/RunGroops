@@ -25,5 +25,14 @@ namespace RunGroops.Controllers {
         public IActionResult Create() {
             return View();
         }
+
+        [HttpPost]
+        public async Task<IActionResult> Create(Club club) {
+            if (!ModelState.IsValid) {
+                return View(club);
+            }
+            _clubRepository.Add(club);
+            return RedirectToAction("Index");
+        }
     }
 }
