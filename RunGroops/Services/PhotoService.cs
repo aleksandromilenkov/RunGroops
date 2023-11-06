@@ -6,15 +6,17 @@ using RunGroops.Interfaces;
 
 namespace RunGroops.Services {
     public class PhotoService : IPhotoService {
-        private readonly Cloudinary _cloudinary;
+        private readonly Cloudinary _cloundinary;
+
         public PhotoService(IOptions<CloudinarySettings> config) {
             var acc = new Account(
                 config.Value.CloudName,
                 config.Value.ApiKey,
                 config.Value.ApiSecret
                 );
-            _cloudinary = new Cloudinary(acc);
+            _cloundinary = new Cloudinary(acc);
         }
+
         public async Task<ImageUploadResult> AddPhotoAsync(IFormFile file) {
             var uploadResult = new ImageUploadResult();
             if (file.Length > 0) {
@@ -23,15 +25,14 @@ namespace RunGroops.Services {
                     File = new FileDescription(file.FileName, stream),
                     Transformation = new Transformation().Height(500).Width(500).Crop("fill").Gravity("face")
                 };
-                uploadResult = await _cloudinary.UploadAsync(uploadParams);
+                uploadResult = await _cloundinary.UploadAsync(uploadParams);
             }
             return uploadResult;
         }
 
         public async Task<DeletionResult> DeletePhotoAsync(string publicId) {
             var deleteParams = new DeletionParams(publicId);
-            var result = await _cloudinary.DestroyAsync(deleteParams);
-            return result;
+            return await _cloundinary.DestroyAsync(deleteParams);
         }
     }
 }

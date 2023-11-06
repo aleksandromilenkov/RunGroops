@@ -2,15 +2,18 @@
 using RunGroops.Data;
 using RunGroops.Interfaces;
 using RunGroops.Models;
+using RunGroops.ViewModels;
 
 namespace RunGroops.Controllers {
     public class ClubController : Controller {
         private readonly ApplicationDbContext _context;
         private readonly IClubRepository _clubRepository;
+        private readonly IPhotoService _photoService;
 
-        public ClubController(ApplicationDbContext context, IClubRepository clubRepository) {
+        public ClubController(ApplicationDbContext context, IClubRepository clubRepository, IPhotoService photoService) {
             this._context = context;
             this._clubRepository = clubRepository;
+            this._photoService = photoService;
         }
         public async Task<IActionResult> Index() {
             var clubs = await _clubRepository.GetAll();
@@ -27,12 +30,27 @@ namespace RunGroops.Controllers {
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create(Club club) {
-            if (!ModelState.IsValid) {
-                return View(club);
+        public async Task<IActionResult> Create(CreateClubViewModel clubViewModel) {
+            if (ModelState.IsValid) {
+                var result = await _photoService.AddPhotoAsync(clubViewModel.Image);
+                var club = new Club {
+                    Title = clubViewModel.Title,
+                    Description = clubViewModel.Description,
+                    Image = result.Url.ToString(),
+                    Address = new Address {
+                        Street = clubViewModel.Address.Street,
+                        City = clubViewModel.Address.City,
+                        State = clubViewModel.Address.State
+                    }
+                };
+                _clubRepository.Add(club);
+                return RedirectToAction("Index");
             }
-            _clubRepository.Add(club);
-            return RedirectToAction("Index");
+            else {
+                ModelState.AddModelError("", "Photo upload failed");
+            }
+
+            return View(clubViewModel);
         }
     }
 }
