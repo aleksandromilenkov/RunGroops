@@ -27,6 +27,9 @@ namespace RunGroops.Repository {
         public async Task<Club> GetByIdAsync(int id) {
             return await _context.Clubs.Include(c => c.Address).FirstOrDefaultAsync(c => c.Id == id);
         }
+        public async Task<Club> GetByIdAsyncNoTracking(int id) {
+            return await _context.Clubs.Include(c => c.Address).AsNoTracking().FirstOrDefaultAsync(c => c.Id == id);
+        }
 
         public async Task<IEnumerable<Club>> GetClubByCity(string city) {
             return await _context.Clubs.Where(c => c.Address.City.Contains(city)).ToListAsync();

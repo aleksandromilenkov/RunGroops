@@ -52,5 +52,62 @@ namespace RunGroops.Controllers {
 
             return View(clubViewModel);
         }
+        public async Task<IActionResult> Edit(int id) {
+            var club = await _clubRepository.GetByIdAsync(id);
+            if (club == null) {
+                return View("Error");
+            }
+            var clubViewModel = new EditClubViewModel {
+                Title = club.Title,
+                Description = club.Description,
+                AddressId = club.AddressId,
+                Address = new Address {
+                    Street = club.Address.Street,
+                    City = club.Address.City,
+                    State = club.Address.State
+                },
+                ClubCategory = club.ClubCategory,
+                URL = club.Image
+            };
+            return View(clubViewModel);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Edit(int id, EditClubViewModel editClubViewModel) {
+            if (!ModelState.IsValid) {
+                ModelState.AddModelError("", "Failed to edit club");
+                var errors = ModelState.Values.SelectMany(v => v.Errors);
+                return View("Edit", editClubViewModel);
+
+            }
+            var userClub = await _clubRepository.GetByIdAsyncNoTracking(id);
+            if (userClub != null) {
+                try {
+                    await _photoService.DeletePhotoAsync(userClub.Image);
+                }
+                catch (Exception ex) {
+                    ModelState.AddModelError("", "Could not delete photo");
+                    return View("Edit", editClubViewModel);
+                }
+                var photoResult = await _photoService.AddPhotoAsync(editClubViewModel.Image);
+                var club = new Club {
+                    Id = id,
+                    Title = editClubViewModel.Title,
+                    Description = editClubViewModel.Description,
+                    Image = photoResult.Url.ToString(),
+                    AddressId = editClubViewModel.AddressId,
+                    Address = new Address {
+                        Street = editClubViewModel.Address.Street,
+                        City = editClubViewModel.Address.City,
+                        State = editClubViewModel.Address.State
+                    }
+                };
+                _clubRepository.Update(club);
+                return RedirectToAction("Index");
+            }
+            else {
+                return View(editClubViewModel);
+            }
+        }
     }
 }
