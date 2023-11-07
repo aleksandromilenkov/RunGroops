@@ -117,7 +117,7 @@ namespace RunGroops.Controllers {
             return View(clubDetails);
         }
 
-        [HttpPost, ActionName("DeleteClub")]
+        [HttpPost, ActionName("Delete")]
         public async Task<IActionResult> DeleteClub(int id) {
             var club = await _clubRepository.GetByIdAsync(id);
             if (club == null) {
