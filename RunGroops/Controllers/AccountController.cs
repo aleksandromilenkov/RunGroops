@@ -43,5 +43,32 @@ namespace RunGroops.Controllers {
             TempData["Error"] = "Wrong credentials. Please try again";
             return View(loginViewModel);
         }
+
+        public IActionResult Register() {
+            var response = new RegisterViewModel(); // if you reload the page while trying to log in, the data in the inputs will be restored
+            return View(response);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Register(RegisterViewModel registerViewModel) {
+            if (!ModelState.IsValid) return View(registerViewModel);
+            var user = await _userManager.FindByEmailAsync(registerViewModel.EmailAddress);
+            if (user != null) {
+                TempData["Error"] = "User with that e-mail already exists.";
+                return View(registerViewModel);
+            }
+            AppUser newUser = new AppUser { Email = registerViewModel.EmailAddress, UserName = registerViewModel.EmailAddress };
+            var newUserResponse = await _userManager.CreateAsync(newUser, registerViewModel.Password);
+            if (newUserResponse.Succeeded) {
+                await _userManager.AddToRoleAsync(newUser, UserRoles.User);
+            }
+            return RedirectToAction("Index", "Home");
+        }
+        [HttpPost]
+        public async Task<IActionResult> Logout() {
+            await _signInManager.SignOutAsync();
+            return RedirectToAction("Index", "Race");
+        }
     }
 }
+
