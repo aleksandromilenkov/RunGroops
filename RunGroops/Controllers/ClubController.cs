@@ -9,11 +9,13 @@ namespace RunGroops.Controllers {
         private readonly ApplicationDbContext _context;
         private readonly IClubRepository _clubRepository;
         private readonly IPhotoService _photoService;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public ClubController(ApplicationDbContext context, IClubRepository clubRepository, IPhotoService photoService) {
+        public ClubController(ApplicationDbContext context, IClubRepository clubRepository, IPhotoService photoService, IHttpContextAccessor httpContextAccessor) {
             this._context = context;
             this._clubRepository = clubRepository;
             this._photoService = photoService;
+            _httpContextAccessor = httpContextAccessor;
         }
         public async Task<IActionResult> Index() {
             var clubs = await _clubRepository.GetAll();
@@ -26,7 +28,9 @@ namespace RunGroops.Controllers {
         }
 
         public IActionResult Create() {
-            return View();
+            var curUserId = _httpContextAccessor.HttpContext?.User.GetUserId();
+            var createClubViewModel = new CreateClubViewModel { AppUserId = curUserId };
+            return View(createClubViewModel);
         }
 
         [HttpPost]
@@ -37,6 +41,7 @@ namespace RunGroops.Controllers {
                     Title = clubViewModel.Title,
                     Description = clubViewModel.Description,
                     Image = result.Url.ToString(),
+                    AppUserId = clubViewModel.AppUserId,
                     Address = new Address {
                         Street = clubViewModel.Address.Street,
                         City = clubViewModel.Address.City,
