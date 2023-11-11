@@ -33,7 +33,10 @@ namespace RunGroops.Controllers {
                 Id = user.Id,
                 UserName = user.UserName,
                 Pace = user.Pace,
-                Mileage = user.Mileage
+                Mileage = user.Mileage,
+                Image = user.ProfileImageUrl,
+                City = user.City,
+                State = user.State,
             };
             return View(userDetailViewModel);
         }
