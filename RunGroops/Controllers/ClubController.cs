@@ -24,6 +24,7 @@ namespace RunGroops.Controllers {
 
         public async Task<IActionResult> Detail(int id) {
             Club club = await _clubRepository.GetByIdAsync(id);
+            club.AppUser = await _clubRepository.GetClubOwner(club.AppUserId);
             return View(club);
         }
 

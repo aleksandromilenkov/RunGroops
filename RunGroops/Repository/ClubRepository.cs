@@ -35,6 +35,10 @@ namespace RunGroops.Repository {
             return await _context.Clubs.Where(c => c.Address.City.Contains(city)).ToListAsync();
         }
 
+        public async Task<AppUser> GetClubOwner(string appUserId) {
+            return await _context.Users.FindAsync(appUserId);
+        }
+
         public bool Save() {
             var saved = _context.SaveChanges();
             return saved > 0 ? true : false;

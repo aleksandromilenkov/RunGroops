@@ -10,12 +10,14 @@ namespace RunGroops.Controllers {
         private readonly IRaceRepository _raceRepository;
         private readonly IPhotoService _photoService;
         private readonly IHttpContextAccessor _httpContextAccessor;
-
-        public RaceController(ApplicationDbContext context, IRaceRepository raceRepository, IPhotoService photoService, IHttpContextAccessor httpContextAccessor) {
+        private readonly IUserRepository _userRepository;
+        [ActivatorUtilitiesConstructor]
+        public RaceController(ApplicationDbContext context, IRaceRepository raceRepository, IPhotoService photoService, IHttpContextAccessor httpContextAccessor, IUserRepository userRepository) {
             this._context = context;
             this._raceRepository = raceRepository;
             this._photoService = photoService;
             _httpContextAccessor = httpContextAccessor;
+            this._userRepository = userRepository;
         }
         public async Task<IActionResult> Index() {
             var races = await _raceRepository.GetAll();
@@ -24,6 +26,7 @@ namespace RunGroops.Controllers {
 
         public async Task<IActionResult> Detail(int id) {
             Race race = await _raceRepository.GetByIdAsync(id);
+            race.AppUser = await _userRepository.GetUserById(race.AppUserId);
             return View(race);
         }
 

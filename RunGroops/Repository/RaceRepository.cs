@@ -35,6 +35,7 @@ namespace RunGroops.Repository {
             return await _context.Races.Where(r => r.Address.City == city).ToListAsync();
         }
 
+
         public bool Save() {
             var saved = _context.SaveChanges();
             return saved > 0 ? true : false;

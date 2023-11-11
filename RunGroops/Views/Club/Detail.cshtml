@@ -42,6 +42,16 @@
                 @Model.Description
               </article>
               <hr>
+                @if(Model.AppUser?.UserName != null) {
+                        <h4>
+                            Club owner: <a class="btn btn-outline-primary" asp-controller="User" asp-action="Detail" asp-route-id="@Model.AppUser.Id">
+                                @Model.AppUser.UserName
+                            </a>
+                        </h4>
+                }
+                else{
+                    <h4>This club has no owner, it has multiple action holders.</h4>
+                    }
               
 
 @*                  <li class="list-group-item py-4">
