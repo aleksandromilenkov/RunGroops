@@ -25,7 +25,7 @@ namespace RunGroops.Repository {
         }
 
         public async Task<Club> GetByIdAsync(int id) {
-            return await _context.Clubs.Include(c => c.Address).FirstOrDefaultAsync(c => c.Id == id);
+            return await _context.Clubs.Include(c => c.Address).Include(c => c.AppUser).FirstOrDefaultAsync(c => c.Id == id);
         }
         public async Task<Club> GetByIdAsyncNoTracking(int id) {
             return await _context.Clubs.Include(c => c.Address).AsNoTracking().FirstOrDefaultAsync(c => c.Id == id);

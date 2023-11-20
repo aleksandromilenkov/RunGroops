@@ -1,18 +1,15 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using RunGroops.Data;
 using RunGroops.Interfaces;
 using RunGroops.Models;
 using RunGroops.ViewModels;
 
 namespace RunGroops.Controllers {
     public class ClubController : Controller {
-        private readonly ApplicationDbContext _context;
         private readonly IClubRepository _clubRepository;
         private readonly IPhotoService _photoService;
         private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public ClubController(ApplicationDbContext context, IClubRepository clubRepository, IPhotoService photoService, IHttpContextAccessor httpContextAccessor) {
-            this._context = context;
+        public ClubController(IClubRepository clubRepository, IPhotoService photoService, IHttpContextAccessor httpContextAccessor) {
             this._clubRepository = clubRepository;
             this._photoService = photoService;
             _httpContextAccessor = httpContextAccessor;
@@ -24,7 +21,6 @@ namespace RunGroops.Controllers {
 
         public async Task<IActionResult> Detail(int id) {
             Club club = await _clubRepository.GetByIdAsync(id);
-            club.AppUser = await _clubRepository.GetClubOwner(club.AppUserId);
             return View(club);
         }
 
