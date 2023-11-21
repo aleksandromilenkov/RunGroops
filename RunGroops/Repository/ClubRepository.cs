@@ -20,6 +20,10 @@ namespace RunGroops.Repository {
             return Save();
         }
 
+        public async Task<int> GetCountAsync() {
+            return await _context.Clubs.CountAsync();
+        }
+
         public async Task<IEnumerable<Club>> GetAll() {
             return await _context.Clubs.ToListAsync();
         }
