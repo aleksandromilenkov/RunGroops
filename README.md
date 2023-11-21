@@ -11,6 +11,8 @@ You can see all registered runners.
 You can edit/delete only the races and clubs that are created by you.  
 In the Home page you can find the clubs that are near your city. (I'm using geo location finder with ipinfo)  
 
+I also implemented Unit tests for controler's functions
+
 
 ## Home View:  
 
