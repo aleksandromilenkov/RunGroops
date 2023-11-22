@@ -85,7 +85,58 @@ namespace RunGroops.Tests.Repository {
             result.Should().BeOfType<List<Club>>();
         }
 
+        [Fact]
+        public async void ClubRepository_GetCountAsync_ReturnsInt() {
+            //Arrange
+            var club = new Club() {
+                Title = "Running Club 1",
+                Image = "https://www.eatthis.com/wp-content/uploads/sites/4/2020/05/running.jpg?quality=82&strip=1&resize=640%2C360",
+                Description = "This is the description of the first cinema",
+                ClubCategory = ClubCategory.City,
+                Address = new Address() {
+                    Street = "123 Main St",
+                    City = "Charlotte",
+                    State = "NC"
+                }
+            };
+            var dbContext = await GetDbContext();
+            var clubRepository = new ClubRepository(dbContext);
 
+            //Act
+            clubRepository.Add(club);
+            var result = await clubRepository.GetCountAsync();
+
+            //Assert
+            result.Should().Be(1);
+        }
+
+        [Fact]
+        public async void ClubRepository_GetClubsByState_ReturnsList() {
+            //Arrange
+            var city = "Tetovo";
+            var club = new Club() {
+                Title = "Running Club 1",
+                Image = "https://www.eatthis.com/wp-content/uploads/sites/4/2020/05/running.jpg?quality=82&strip=1&resize=640%2C360",
+                Description = "This is the description of the tetovo's club",
+                ClubCategory = ClubCategory.City,
+                Address = new Address() {
+                    Street = "123 Shara St",
+                    City = "Tetovo",
+                    State = "Macedonia"
+                }
+            };
+            var dbContext = await GetDbContext();
+            var clubRepository = new ClubRepository(dbContext);
+
+            //Act
+            clubRepository.Add(club);
+            var result = await clubRepository.GetClubByCity(city);
+
+            //Assert
+            result.Should().NotBeNull();
+            result.Should().BeOfType<List<Club>>();
+            result.First().Title.Should().Be("Running Club 1");
+        }
 
     }
 }
