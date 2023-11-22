@@ -13,7 +13,7 @@ namespace RunGroops.Tests.Repository {
                 .Options;
             var databaseContext = new ApplicationDbContext(options);
             databaseContext.Database.EnsureCreated();
-            if (await databaseContext.Clubs.CountAsync() < 0) {
+            if (await databaseContext.Clubs.CountAsync() <= 0) {
                 for (int i = 0; i < 10; i++) {
                     databaseContext.Clubs.Add(
                       new Club() {
