@@ -10,7 +10,7 @@ You can see all the Races and Clubs without account required.
 You can see all registered runners.  
 You can edit/delete only the races and clubs that are created by you.  
 In the Home page you can find the clubs that are near your city. (I'm using geo location finder with ipinfo)  
-
+I'm using Bootstrap for styling.
 I also implemented Unit tests for controler's functions
 
 
